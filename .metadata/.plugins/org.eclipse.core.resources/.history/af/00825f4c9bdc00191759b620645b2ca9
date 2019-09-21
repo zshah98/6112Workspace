@@ -1,0 +1,81 @@
+package org.uncc;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import java.sql.Statement;
+
+
+/**
+ * Servlet implementation class HelloWorld
+ */
+@WebServlet("/HelloWorld")
+public class HelloWorld extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public HelloWorld() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+        PrintWriter printWriter  = response.getWriter();
+        printWriter.println("<h1>Hello World!</h1>");
+        PrintWriter out  = response.getWriter();
+        out.println("<html>"); //HTML PAGE START
+		out.println("<head><title>Display of Test DB User table data</title></head>");
+		out.println("<center><h1>LIST ALL USERS IN TABLE HELLO </h1>");
+    	Connection conn = null;
+    	Statement state = null;
+    	try {
+    		Class.forName("com.mysql.cj.jdbc.Driver");
+    	    conn =
+    	       DriverManager.getConnection("jdbc:mysql://localhost:3306/test?serverTimezone=UTC",
+    	    		   "sandy","pass123");
+
+    	    state = conn.createStatement();
+    	    String query = "SELECT * FROM hello";
+    	    ResultSet resultset = state.executeQuery(query);
+    	    
+    	    while (resultset.next()) {
+    	        String name = resultset.getString("name");
+    	        out.println("<tr><td>"+"User: " + "<td></td>"+ name + "</tr></td>");
+
+    	      }
+    	    
+    	   
+    	  
+    	} catch (Exception ex) {
+    	    // handle any errors
+    	    System.out.println("SQLException: " + ex.getMessage());
+    	   ;
+    	}  
+    	
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
